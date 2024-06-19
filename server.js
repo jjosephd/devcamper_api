@@ -22,6 +22,14 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
+//Logging the HTTP method, protocol, host, and URL of an incoming request (req) to the console.
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.protocol}://${req.get('host')} ${req.url}`);
+  next();
+};
+//Mount logger middleware
+app.use(logger);
+
 //Mount Routes
 app.use('/api/v1/bootcamps', bootcamps);
 

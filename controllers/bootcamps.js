@@ -17,7 +17,9 @@
 //@access       Public
 
 exports.getBootcamps = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Show All Bootcamps' });
+  res
+    .status(200)
+    .json({ success: true, msg: 'Show All Bootcamps', jordan: req.jordan });
 };
 
 //@desc         Get single bootcamp
