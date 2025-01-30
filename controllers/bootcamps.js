@@ -20,10 +20,10 @@ const Bootcamp = require('../models/Bootcamp');
 
 exports.getBootcamps = async (req, res, next) => {
   try {
-    const bootcamps = await bootcamps.find();
+    const bootcamps = await Bootcamp.find();
     res.status(200).json({ success: true, data: bootcamps });
   } catch (err) {
-    next(err);
+    res.status(400).json({ success: false });
   }
 };
 
@@ -31,15 +31,22 @@ exports.getBootcamps = async (req, res, next) => {
 //@route        GET /api/v1/bootcamps/:id
 //@access       Public
 
-exports.getBootcamp = async (req, res, next) => {};
+exports.getBootcamp = async (req, res, next) => {
+  try {
+  } catch (error) {}
+};
 
 //@desc         Create bootcamp entry
 //@route        GET /api/v1/bootcamps/:id
 //@access       Private
 exports.createBootcamp = async (req, res, next) => {
-  const bootcamp = await Bootcamp.create(req.body);
-  console.log(req.body);
-  res.status(201).json({ success: true, data: bootcamp });
+  try {
+    const bootcamp = await Bootcamp.create(req.body);
+    console.log(req.body);
+    res.status(201).json({ success: true, data: bootcamp });
+  } catch (error) {
+    res.status(400).json({ success: false });
+  }
 };
 
 //@desc         Update single bootcamps
