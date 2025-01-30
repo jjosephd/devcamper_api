@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const Bootcamp = require('../models/Bootcamp');
+const colors = require('colors');
 
 //@desc         Get all bootcamps
 //@route        GET /api/v1/bootcamps
@@ -34,10 +35,14 @@ exports.getBootcamps = async (req, res, next) => {
 exports.getBootcamp = async (req, res, next) => {
   try {
     const bootcamp = await Bootcamp.findById(req.params.id);
+    if (!bootcamp) {
+      return res.status(400).json({ success: false });
+    }
     res.status(200).json({
       success: true,
       data: bootcamp,
     });
+    console.log(`Retrieved Bootcamp ID: ${req.params.id}`.bgCyan.bold);
   } catch (err) {
     res.status(400).json({ success: false });
   }
@@ -59,13 +64,20 @@ exports.createBootcamp = async (req, res, next) => {
 //@desc         Update single bootcamps
 //@route        PUT /api/v1/bootcamps/:id
 //@access       Private
-exports.updateBootcamp = (req, res, next) => {
-  res.status(200).json({ success: true, msg: `Update ${req.params.id}` });
+exports.updateBootcamp = async (req, res, next) => {
+  const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!bootcamp) {
+    return res.status(400).json({ success: false });
+  }
+  res.status(200).json({ success: true, data: bootcamp });
 };
 
 //@desc         Delete single bootcamps
 //@route        DELETE /api/v1/bootcamps/:id
 //@access       Private
-exports.deleteBootcamp = (req, res, next) => {
+exports.deleteBootcamp = async (req, res, next) => {
   res.status(200).json({ success: true, msg: `Delete ${req.params.id}` });
 };
