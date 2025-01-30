@@ -11,23 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+const ErrorResponse = require('../utils/errorResponse');
 //@desc         Get all bootcamps
 //@route        GET /api/v1/bootcamps
 //@access       Public
 
-exports.getBootcamps = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: 'Show All Bootcamps', jordan: req.jordan });
+exports.getBootcamps = async (req, res, next) => {
+  try {
+    const bootcamps = await bootcamps.find();
+    res.status(200).json({ success: true, data: bootcamps });
+  } catch (err) {
+    next(err);
+  }
 };
 
 //@desc         Get single bootcamp
 //@route        GET /api/v1/bootcamps/:id
 //@access       Public
 
-exports.getBootcamp = (req, res, next) => {
-  res.status(200).json({ success: true, msg: `Access ${req.params.id}` });
+exports.getBootcamp = async (req, res, next) => {
+  try {
+    const bootcamp = await Bootcamp.findById(req.params.id);
+    if (!bootcamp) {
+      return res.status(400).json({ success: false });
+    }
+    res.status(200).json({ success: true, data: bootcamp });
+  } catch (err) {
+    next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
 };
 
 //@desc         Create bootcamp entry
