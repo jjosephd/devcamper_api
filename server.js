@@ -30,6 +30,9 @@ connectDB();
 
 const app = express();
 
+// Body parser
+app.use(express.json());
+
 //Mount dev logger middleware
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
