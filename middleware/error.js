@@ -11,6 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/**
+ * Error handling middleware function.
+ *
+ * @param {Object} err - The error object.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {Function} next - The next middleware function.
+ */
 const errorHandler = (err, req, res, next) => {
   console.log(err.stack.red);
 
@@ -19,3 +27,5 @@ const errorHandler = (err, req, res, next) => {
     error: err.message || 'Server Error',
   });
 };
+
+module.exports = errorHandler;
