@@ -22,7 +22,9 @@ const colors = require('colors');
 exports.getBootcamps = async (req, res, next) => {
   try {
     const bootcamps = await Bootcamp.find();
-    res.status(200).json({ success: true, data: bootcamps });
+    res
+      .status(200)
+      .json({ success: true, data: bootcamps, count: bootcamps.length });
   } catch (err) {
     res.status(400).json({ success: false });
   }
@@ -93,6 +95,14 @@ exports.updateBootcamp = async (req, res, next) => {
 //@access       Private
 exports.deleteBootcamp = async (req, res, next) => {
   try {
+    /**
+     * Deletes a bootcamp by its ID.
+     *
+     * @param {Object} req - The request object.
+     * @param {Object} req.params - The request parameters.
+     * @param {string} req.params.id - The ID of the bootcamp to delete.
+     * @returns {Promise<Object|null>} The deleted bootcamp object if found, otherwise null.
+     */
     const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
     if (!bootcamp) {
       return res.status(400).json({ success: false });
