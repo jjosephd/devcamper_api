@@ -14,6 +14,7 @@
 
 const Bootcamp = require('../models/Bootcamp');
 const colors = require('colors');
+const ErrorResponse = require('../utils/errorResponse');
 
 //@desc         Get all bootcamps
 //@route        GET /api/v1/bootcamps
@@ -26,7 +27,7 @@ exports.getBootcamps = async (req, res, next) => {
       .status(200)
       .json({ success: true, count: bootcamps.length, data: bootcamps });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(new ErrorResponse(`No bootcamps available`, 404));
   }
 };
 
@@ -36,6 +37,13 @@ exports.getBootcamps = async (req, res, next) => {
 
 exports.getBootcamp = async (req, res, next) => {
   try {
+    /**
+     * Retrieves a bootcamp by its ID.
+     * Await the Bootcamp model's findById method, passing in the ID from the request parameters.
+     * If no bootcamp is found, return a 400 response with a success property of false.
+     * Otherwise, return a 200 response with a success property of true and the bootcamp data.
+     * Log a message to the console indicating the bootcamp ID that was retrieved.
+     * */
     const bootcamp = await Bootcamp.findById(req.params.id);
     if (!bootcamp) {
       return res.status(400).json({ success: false });
@@ -46,8 +54,10 @@ exports.getBootcamp = async (req, res, next) => {
     });
     console.log(`Retrieved Bootcamp ID: ${req.params.id}`.bgCyan.bold);
   } catch (err) {
-    //res.status(400).json({ success: false });
-    next(err);
+    // Throw new error response with the message and status code
+    next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
   }
 };
 
@@ -60,7 +70,7 @@ exports.createBootcamp = async (req, res, next) => {
     console.log(req.body);
     res.status(201).json({ success: true, data: bootcamp });
   } catch (error) {
-    res.status(400).json({ success: false });
+    next(error);
   }
 };
 
@@ -83,11 +93,15 @@ exports.updateBootcamp = async (req, res, next) => {
       runValidators: true,
     });
     if (!bootcamp) {
-      return res.status(400).json({ success: false });
+      next(
+        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+      );
     }
     res.status(200).json({ success: true, data: bootcamp });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
   }
 };
 

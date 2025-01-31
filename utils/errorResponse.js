@@ -11,6 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/**
+ * Error Response class.
+ * @extends Error
+ * Description: This class is used to create/handle custom error responses
+ * @param {String} message - The error message.
+ * @param {Number} statusCode - The error HTTP status code.
+ *
+ */
+
 class ErrorResponse extends Error {
   constructor(message, statusCode) {
     super(message);

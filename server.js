@@ -40,6 +40,7 @@ if (process.env.NODE_ENV === 'development') {
 //Mount Routes
 app.use('/api/v1/bootcamps', bootcamps);
 
+// Mount error handler middleware
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

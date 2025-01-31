@@ -11,6 +11,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+const ErrorResponse = require('../utils/errorResponse');
+
 /**
  * Error handling middleware function.
  *
@@ -20,11 +23,33 @@
  * @param {Function} next - The next middleware function.
  */
 const errorHandler = (err, req, res, next) => {
-  console.log(err.stack.red);
+  let error = { ...err };
 
-  res.status(err.statusCode || 500).json({
+  error.message = err.message;
+
+  console.log(err);
+
+  // Mongoose bad ObjectId
+  if (err.name === 'CastError') {
+    const message = `Resource not found`;
+    error = new ErrorResponse(message, 404);
+  }
+
+  // Mongoose duplicate key
+  if (err.code === 11000) {
+    const message = 'Duplicate field value entered';
+    error = new ErrorResponse(message, 400);
+  }
+
+  // Mongoose validation error
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map((val) => val.message);
+    error = new ErrorResponse(message, 400);
+  }
+
+  res.status(error.statusCode || 500).json({
     success: false,
-    error: err.message || 'Server Error',
+    error: error.message || 'Server Error',
   });
 };
 
